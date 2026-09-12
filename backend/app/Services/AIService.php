@@ -27,4 +27,19 @@ class AIService
     {
         return $this->provider->analyzeSkillGaps($missingSkills, $jobTitle);
     }
+
+    public function generateCoverLetter(array $context): array
+    {
+        return $this->provider->generateCoverLetter($context);
+    }
+
+    public function generateApplicationAnswers(array $context): array
+    {
+        return $this->provider->generateApplicationAnswers($context);
+    }
+
+    public function generateResumeSuggestions(array $context): array
+    {
+        return $this->provider->generateResumeSuggestions($context);
+    }
 }

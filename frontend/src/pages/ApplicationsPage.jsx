@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import ApplicationAssistant from '../components/ApplicationAssistant';
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState({});
@@ -196,6 +197,11 @@ export default function ApplicationsPage() {
                   </div>
                 )}
               </div>
+
+              {/* AI Application Assistant */}
+<div className="mb-6 border-t pt-4">
+  <ApplicationAssistant jobId={selectedApp.job_id} />
+</div>
 
               {/* Notes Section */}
               <div className="mb-6">

@@ -246,28 +246,186 @@ protected function calculatePriorityScore(string $importance, string $difficulty
     return ($importanceScores[$importance] ?? 2) * 10 + ($difficultyScores[$difficulty] ?? 2);
 }
 
-protected function generateSkillGapSummary(array $gaps, string $jobTitle): string
-{
-    $highPriority = array_filter($gaps, fn($g) => $g['importance'] === 'high');
-    $mediumPriority = array_filter($gaps, fn($g) => $g['importance'] === 'medium');
-    $lowPriority = array_filter($gaps, fn($g) => $g['importance'] === 'low');
+protected function generateSkillGapSummary(array $gaps, string $jobTitle): string 
+    {
+        $highPriority = array_filter($gaps, fn($g) => $g['importance'] === 'high');
+        $mediumPriority = array_filter($gaps, fn($g) => $g['importance'] === 'medium');
+        $lowPriority = array_filter($gaps, fn($g) => $g['importance'] === 'low');
 
-    $summary = "For a {$jobTitle} role, you have " . count($gaps) . " skill gaps to address.\n\n";
+        $summary = "For a {$jobTitle} role, you have " . count($gaps) . " skill gaps to address.\n\n";
 
-    if (count($highPriority) > 0) {
-        $summary .= "High Priority: " . implode(', ', array_column($highPriority, 'skill')) . ". These are critical for most " . $jobTitle . " positions.\n\n";
+        if (count($highPriority) > 0) {
+            $summary .= "High Priority: " . implode(', ', array_column($highPriority, 'skill')) . ". These are critical for most " . $jobTitle . " positions.\n\n";
+        }
+
+        if (count($mediumPriority) > 0) {
+            $summary .= "Medium Priority: " . implode(', ', array_column($mediumPriority, 'skill')) . ". These will make you more competitive.\n\n";
+        }
+
+        if (count($lowPriority) > 0) {
+            $summary .= "Nice to Have: " . implode(', ', array_column($lowPriority, 'skill')) . ". These are optional but beneficial.\n\n";
+        }
+
+        $summary .= "Focus on high-priority skills first, then work through the list based on your career goals.";
+
+        return $summary;
     }
 
-    if (count($mediumPriority) > 0) {
-        $summary .= "Medium Priority: " . implode(', ', array_column($mediumPriority, 'skill')) . ". These will make you more competitive.\n\n";
+        public function generateCoverLetter(array $context): array
+    {
+        $resume = $context['resume'];
+        $job = $context['job'];
+        $profile = $resume->profile;
+        $latestExperience = $resume->experiences->first();
+        $latestEducation = $resume->educations->first();
+
+        $fullName = $profile->full_name ?? 'Applicant';
+        $email = $profile->email ?? '';
+        $phone = $profile->phone ?? '';
+        $summary = $profile->professional_summary ?? '';
+        $jobTitle = $job->title;
+        $company = $job->company;
+
+        $experienceParagraph = '';
+        if ($latestExperience) {
+            $experienceParagraph = "Most recently, I served as {$latestExperience->job_title} at {$latestExperience->company}, where {$latestExperience->responsibilities}";
+        }
+
+        $educationParagraph = '';
+        if ($latestEducation) {
+            $educationParagraph = "I hold a {$latestEducation->degree} in {$latestEducation->field_of_study} from {$latestEducation->institution}.";
+        }
+
+        $coverLetter = "Dear Hiring Manager,\n\n" .
+            "I am writing to express my strong interest in the {$jobTitle} position at {$company}. " .
+            "{$summary}\n\n" .
+            "{$experienceParagraph}\n\n" .
+            "{$educationParagraph}\n\n" .
+            "I am particularly drawn to this opportunity at {$company} because it aligns perfectly with my technical background and career aspirations. " .
+            "I am confident that my combination of hands-on experience and academic foundation would allow me to contribute meaningfully to your team from day one.\n\n" .
+            "I would welcome the opportunity to discuss how my skills and experiences align with your needs. Thank you for considering my application.\n\n" .
+            "Sincerely,\n{$fullName}\n{$email}\n{$phone}";
+
+        return [
+            'cover_letter' => $coverLetter,
+            'word_count' => str_word_count($coverLetter),
+            'tone' => 'professional',
+            'personalization_level' => 'high',
+        ];
     }
 
-    if (count($lowPriority) > 0) {
-        $summary .= "Nice to Have: " . implode(', ', array_column($lowPriority, 'skill')) . ". These are optional but beneficial.\n\n";
+    public function generateApplicationAnswers(array $context): array
+    {
+        $resume = $context['resume'];
+        $job = $context['job'];
+        $profile = $resume->profile;
+        $latestExperience = $resume->experiences->first();
+
+        $fullName = $profile->full_name ?? 'Applicant';
+        $summary = $profile->professional_summary ?? '';
+
+        $questions = [
+            [
+                'question' => 'Why are you interested in this position?',
+                'answer' => "I am drawn to the {$job->title} role at {$job->company} because it directly aligns with my expertise in database architecture and quality assurance. {$summary}",
+                'category' => 'motivation',
+            ],
+            [
+                'question' => 'What are your greatest strengths?',
+                'answer' => "My greatest strengths are my analytical approach to database design and my meticulous attention to detail in QA testing. During my time at Ollopa Corporation, I led the architectural design of relational database schemas while simultaneously executing QA test cases to ensure data integrity and workflow validation.",
+                'category' => 'strengths',
+            ],
+            [
+                'question' => 'Tell me about a challenging project you worked on.',
+                'answer' => $latestExperience 
+                    ? "At {$latestExperience->company}, I led the architectural design of relational database schemas and executed bulk data migration. One of the biggest challenges was troubleshooting database mismatches during migration while ensuring zero data loss. I optimized SQL/MySQL queries and collaborated closely with developers to verify fixes, ultimately delivering a stable, high-performance database system."
+                    : "I led the architectural design of relational database schemas during my internship, where I optimized SQL queries and executed bulk data migrations while ensuring data integrity.",
+                'category' => 'experience',
+            ],
+            [
+                'question' => 'Where do you see yourself in 5 years?',
+                'answer' => "In five years, I see myself growing into a senior database architect or backend engineering role, where I can lead larger-scale system designs and mentor junior developers. I am particularly interested in deepening my expertise in cloud database solutions and distributed systems.",
+                'category' => 'goals',
+            ],
+        ];
+
+        return [
+            'questions' => $questions,
+            'total_questions' => count($questions),
+        ];
     }
 
-    $summary .= "Focus on high-priority skills first, then work through the list based on your career goals.";
+    public function generateResumeSuggestions(array $context): array
+    {
+        $job = $context['job'];
+        $jobRequirements = $context['job_requirements'] ?? [];
 
-    return $summary;
-}
+        $suggestions = [];
+
+        // Analyze job requirements and generate targeted suggestions
+        foreach ($jobRequirements as $req) {
+            if ($req['requirement_type'] === 'skill') {
+                $normalizedValue = strtolower($req['normalized_value'] ?? '');
+                
+                if (in_array($normalizedValue, ['python', 'aws', 'azure', 'docker'])) {
+                    $suggestions[] = [
+                        'type' => 'add_skill',
+                        'priority' => $req['classification'] === 'mandatory' ? 'high' : 'medium',
+                        'suggestion' => "Consider adding '{$req['normalized_value']}' to your skills section if you have any exposure to it, even at a beginner level.",
+                        'reason' => "This is a {$req['classification']} requirement for the {$job->title} role.",
+                    ];
+                }
+            }
+
+            if ($req['requirement_type'] === 'experience') {
+                $suggestions[] = [
+                    'type' => 'emphasize_experience',
+                    'priority' => $req['classification'] === 'mandatory' ? 'high' : 'medium',
+                    'suggestion' => "Quantify your experience with specific metrics (e.g., 'optimized queries reducing load time by 40%', 'migrated 10,000+ records with 99.9% accuracy').",
+                    'reason' => "The job requires {$req['normalized_value']}. Concrete numbers make your experience more compelling.",
+                ];
+            }
+        }
+
+        // General suggestions based on job type
+        $jobDesc = strtolower($job->description);
+        
+        if (str_contains($jobDesc, 'team') || str_contains($jobDesc, 'collaborate')) {
+            $suggestions[] = [
+                'type' => 'soft_skill',
+                'priority' => 'medium',
+                'suggestion' => "Highlight your collaboration experience. Add bullet points about working with cross-functional teams.",
+                'reason' => "The job description emphasizes teamwork and collaboration.",
+            ];
+        }
+
+        if (str_contains($jobDesc, 'lead') || str_contains($jobDesc, 'senior')) {
+            $suggestions[] = [
+                'type' => 'leadership',
+                'priority' => 'high',
+                'suggestion' => "Emphasize leadership moments from your internship, such as leading database architecture design or coordinating QA efforts.",
+                'reason' => "The role appears to value leadership qualities.",
+            ];
+        }
+
+        // Always add a general suggestion
+        $suggestions[] = [
+            'type' => 'keywords',
+            'priority' => 'medium',
+            'suggestion' => "Mirror the exact terminology used in the job description. If they say 'relational database design', use that exact phrase instead of 'database architecture'.",
+            'reason' => "ATS systems and recruiters scan for exact keyword matches.",
+        ];
+
+        // Sort by priority
+        usort($suggestions, fn($a, $b) => 
+            ($b['priority'] === 'high' ? 3 : ($b['priority'] === 'medium' ? 2 : 1)) - 
+            ($a['priority'] === 'high' ? 3 : ($a['priority'] === 'medium' ? 2 : 1))
+        );
+
+        return [
+            'suggestions' => $suggestions,
+            'total_suggestions' => count($suggestions),
+            'job_title' => $job->title,
+        ];
+    }
 }

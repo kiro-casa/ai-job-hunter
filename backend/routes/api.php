@@ -65,4 +65,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/automation/settings', [\App\Http\Controllers\AutomationController::class, 'getSettings']);
     Route::patch('/automation/settings', [\App\Http\Controllers\AutomationController::class, 'updateSettings']);
     Route::post('/applications/{id}/auto-apply', [\App\Http\Controllers\AutomationController::class, 'attemptAutoApply']);
+
+    // Application Assistant Routes
+    Route::post('/jobs/{id}/assistant/cover-letter', [\App\Http\Controllers\ApplicationAssistantController::class, 'coverLetter']);
+    Route::post('/jobs/{id}/assistant/answers', [\App\Http\Controllers\ApplicationAssistantController::class, 'applicationAnswers']);
+    Route::post('/jobs/{id}/assistant/resume-suggestions', [\App\Http\Controllers\ApplicationAssistantController::class, 'resumeSuggestions']);
 });
