@@ -1,13 +1,13 @@
-# Use PHP 8.4 CLI image
+# Use PHP 8.4 CLI image to match your composer.lock requirements
 FROM php:8.4-cli
 
-# Install system dependencies (Added libcurl4-openssl-dev, libzip-dev, libfreetype6-dev)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev zip unzip gnupg \
     libcurl4-openssl-dev libzip-dev
 
-# Install Node.js 18 (Required for React 19/Vite)
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+# Install Node.js 20 (Required for modern Vite/Rolldown)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 
 # Configure GD extension with freetype and jpeg libraries
