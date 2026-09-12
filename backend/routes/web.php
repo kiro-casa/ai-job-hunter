@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Catch-all route to serve the React frontend
+// Serve the React app for the root URL
+Route::get('/', function () {
+    return response()->file(public_path('index.html'), [
+        'Content-Type' => 'text/html',
+    ]);
+});
+
+// Serve the React app for all other frontend routes (like /login, /dashboard)
 Route::get('/{any}', function () {
-    $indexPath = public_path('index.html');
-    
-    if (file_exists($indexPath)) {
-        return file_get_contents($indexPath);
-    }
-    
-    return response()->view('errors.500', [
-        'message' => 'Frontend build (index.html) is missing from the public folder.'
-    ], 500);
+    return response()->file(public_path('index.html'), [
+        'Content-Type' => 'text/html',
+    ]);
 })->where('any', '.*');
