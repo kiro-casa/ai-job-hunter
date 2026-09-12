@@ -1,5 +1,5 @@
-# Use PHP 8.2 CLI image
-FROM php:8.2-cli
+# Use PHP 8.4 CLI image
+FROM php:8.4-cli
 
 # Install system dependencies (Added libcurl4-openssl-dev, libzip-dev, libfreetype6-dev)
 RUN apt-get update && apt-get install -y \
