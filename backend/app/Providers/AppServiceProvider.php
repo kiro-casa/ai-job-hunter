@@ -3,20 +3,17 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\Providers\AIProviderInterface;
+use App\Services\Providers\MockAIProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+        // Bind the interface to the Mock Provider
+        $this->app->bind(AIProviderInterface::class, MockAIProvider::class);
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         //

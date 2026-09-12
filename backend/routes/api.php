@@ -32,4 +32,12 @@ Route::middleware('auth:sanctum')->group(function () {
             'data' => $request->user(),
         ]);
     });
+    Route::post('/resumes', [\App\Http\Controllers\ResumeController::class, 'store']);
+    Route::get('/resumes', [\App\Http\Controllers\ResumeController::class, 'index']);
+    Route::get('/resumes/{id}', [\App\Http\Controllers\ResumeController::class, 'show']);
+    Route::post('/resumes/{id}/verify', [\App\Http\Controllers\ResumeController::class, 'verify']);
+
+    Route::post('/jobs', [\App\Http\Controllers\JobController::class, 'store']);
+    Route::get('/jobs', [\App\Http\Controllers\JobController::class, 'index']);
+    Route::get('/jobs/{id}', [\App\Http\Controllers\JobController::class, 'show']);
 });
