@@ -34,7 +34,7 @@ php artisan key:generate
 php artisan migrate
 php artisan serve
 
-### Frontend Setup
+### **Backend Setup**
 ```bash
 cd frontend
 npm install
