@@ -22,4 +22,9 @@ class AIService
     {
         return $this->provider->extractJobRequirements($jobDescription);
     }
+
+    public function analyzeSkillGaps(array $missingSkills, string $jobTitle): array
+    {
+        return $this->provider->analyzeSkillGaps($missingSkills, $jobTitle);
+    }
 }

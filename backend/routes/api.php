@@ -40,4 +40,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/jobs', [\App\Http\Controllers\JobController::class, 'store']);
     Route::get('/jobs', [\App\Http\Controllers\JobController::class, 'index']);
     Route::get('/jobs/{id}', [\App\Http\Controllers\JobController::class, 'show']);
+
+    // Match Routes
+    Route::post('/jobs/{id}/match', [\App\Http\Controllers\MatchController::class, 'calculate']);
+    Route::get('/jobs/{id}/match', [\App\Http\Controllers\MatchController::class, 'show']);
+
+    // Eligibility Routes
+    Route::post('/jobs/{id}/eligibility/check', [\App\Http\Controllers\EligibilityController::class, 'check']);
+    Route::get('/jobs/{id}/eligibility', [\App\Http\Controllers\EligibilityController::class, 'check']); // GET alias for convenience
+
+    // Skill Gap Routes
+    Route::post('/jobs/{id}/skill-gaps', [\App\Http\Controllers\SkillGapController::class, 'analyze']);
+    Route::get('/jobs/{id}/skill-gaps', [\App\Http\Controllers\SkillGapController::class, 'analyze']);
+
+    // Application Routes
+    Route::post('/applications', [\App\Http\Controllers\ApplicationController::class, 'store']);
+    Route::get('/applications', [\App\Http\Controllers\ApplicationController::class, 'index']);
+    Route::get('/applications/{id}', [\App\Http\Controllers\ApplicationController::class, 'show']);
+    Route::patch('/applications/{id}/status', [\App\Http\Controllers\ApplicationController::class, 'updateStatus']);
+    Route::post('/applications/{id}/notes', [\App\Http\Controllers\ApplicationController::class, 'addNote']);
+    Route::get('/dashboard', [\App\Http\Controllers\ApplicationController::class, 'dashboard']);
+
+    // Automation Routes
+    Route::get('/automation/settings', [\App\Http\Controllers\AutomationController::class, 'getSettings']);
+    Route::patch('/automation/settings', [\App\Http\Controllers\AutomationController::class, 'updateSettings']);
+    Route::post('/applications/{id}/auto-apply', [\App\Http\Controllers\AutomationController::class, 'attemptAutoApply']);
 });

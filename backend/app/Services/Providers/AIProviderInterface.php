@@ -16,4 +16,6 @@ interface AIProviderInterface
      * @return array Structured requirements data
      */
     public function extractJobRequirements(string $jobDescription): array;
+
+    public function analyzeSkillGaps(array $missingSkills, string $jobTitle): array;
 }

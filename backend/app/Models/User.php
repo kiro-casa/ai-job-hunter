@@ -55,4 +55,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Job::class);
     }
+
+    public function jobMatches()
+    {
+        return $this->hasMany(JobMatch::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    public function automationSettings()
+    {
+        return $this->hasOne(AutomationSetting::class);
+    }
 }

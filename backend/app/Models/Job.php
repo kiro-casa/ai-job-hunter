@@ -39,4 +39,9 @@ class Job extends Model
         return $this->belongsToMany(Skill::class, 'job_skills')
                     ->withPivot('requirement_level');
     }
+
+    public function application()
+    {
+        return $this->hasOne(Application::class);
+    }
 }
