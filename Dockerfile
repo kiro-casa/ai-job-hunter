@@ -1,15 +1,19 @@
 # Use PHP 8.2 CLI image
 FROM php:8.2-cli
 
-# Install system dependencies (added libjpeg-dev for gd extension)
+# Install system dependencies (Added libcurl4-openssl-dev, libzip-dev, libfreetype6-dev)
 RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libjpeg-dev libonig-dev libxml2-dev zip unzip gnupg
+    git curl libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev zip unzip gnupg \
+    libcurl4-openssl-dev libzip-dev
 
 # Install Node.js 18 (Required for React 19/Vite)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
 
-# Install PHP extensions needed for Laravel (Added curl, zip, gd)
+# Configure GD extension with freetype and jpeg libraries
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+
+# Install PHP extensions needed for Laravel
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath curl zip gd
 
 # Install Composer
@@ -22,7 +26,6 @@ WORKDIR /app
 COPY . .
 
 # 1. Install Laravel dependencies 
-# Added COMPOSER_MEMORY_LIMIT=-1 to prevent out-of-memory crashes
 WORKDIR /app/backend
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts
 
