@@ -33,3 +33,9 @@ composer install
 php artisan key:generate
 php artisan migrate
 php artisan serve
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
