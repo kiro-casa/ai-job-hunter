@@ -1,7 +1,7 @@
 # Use PHP 8.4 CLI image to match your composer.lock requirements
 FROM php:8.4-cli
 
-# Install system dependencies (Added libpq-dev for PostgreSQL)
+# Install system dependencies (libpq-dev is required for PostgreSQL)
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev zip unzip gnupg \
     libcurl4-openssl-dev libzip-dev libpq-dev
@@ -13,8 +13,8 @@ RUN apt-get install -y nodejs
 # Configure GD extension with freetype and jpeg libraries
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# Install PHP extensions needed for Laravel (Changed pdo_mysql to pdo_pgsql)
-RUN docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath curl zip gd
+# Install PHP extensions needed for Laravel (Added 'pgsql' alongside 'pdo_pgsql')
+RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath curl zip gd
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
