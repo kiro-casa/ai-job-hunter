@@ -44,6 +44,9 @@ RUN cp -r dist/* ../backend/public/
 # Set working directory back to backend
 WORKDIR /app/backend
 
+# Fix Laravel storage permissions for Docker
+RUN chmod -R 777 /app/backend/storage /app/backend/bootstrap/cache
+
 # Expose port 10000 (Render's default for Docker)
 EXPOSE 10000
 
