@@ -29,9 +29,10 @@ COPY . .
 WORKDIR /app/backend
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts
 
-# 2. Create a dummy .env and generate key so artisan doesn't crash later
+# 2. Create a dummy .env from example (don't overwrite if APP_KEY already exists)
 RUN cp .env.example .env || echo "APP_NAME=Laravel" > .env
-RUN php artisan key:generate --force
+# Only generate key if not already set in environment
+RUN if [ -z "$APP_KEY" ]; then php artisan key:generate --force; fi
 
 # 3. Now run the scripts safely
 RUN composer dump-autoload

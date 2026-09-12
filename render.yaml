@@ -15,6 +15,8 @@ services:
         value: production
       - key: APP_DEBUG
         value: false
+      - key: APP_KEY
+        value: base64:RNOvvr4z5UCG+9sTTOWnZYvlDVtdnu3DkUU1YQlamUI=
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
@@ -22,9 +24,7 @@ services:
           name: ai-job-hunter-db
           property: host
       - key: DB_PORT
-        fromDatabase:
-          name: ai-job-hunter-db
-          property: port
+        value: "5432"
       - key: DB_DATABASE
         fromDatabase:
           name: ai-job-hunter-db
