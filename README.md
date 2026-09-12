@@ -33,3 +33,20 @@ composer install
 php artisan key:generate
 php artisan migrate
 php artisan serve
+```
+
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Testing
+```bash
+cd backend
+php artisan test
+```
+
+## 👤 Author
+**King Xyro B. Casa**
