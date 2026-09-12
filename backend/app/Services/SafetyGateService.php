@@ -26,11 +26,24 @@ class SafetyGateService
         $user = $application->user;
         $settings = $user->automationSettings;
 
-        // 1. Check if resume is verified
+                // 1. Check if resume exists and is verified
         $checks['resume_verified'] = [
             'passed' => $resume && $resume->status === 'verified',
-            'reason' => $resume && $resume->status === 'verified' ? 'Resume is verified' : 'Resume is not verified',
+            'reason' => !$resume 
+                ? 'No resume attached to this application' 
+                : ($resume->status === 'verified' ? 'Resume is verified' : 'Resume is not verified'),
         ];
+
+        // EARLY EXIT: If no resume, we can't run other checks
+        if (!$resume) {
+            return [
+                'passed' => false,
+                'checks' => $checks,
+                'blocked_reason' => 'No resume attached to this application. Please attach a verified resume.',
+                'eligibility_data' => null,
+                'match_data' => null,
+            ];
+        }
 
         // 2. Check if auto-apply is enabled
         $checks['auto_apply_enabled'] = [

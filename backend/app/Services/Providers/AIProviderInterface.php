@@ -22,6 +22,8 @@ interface AIProviderInterface
     public function generateCoverLetter(array $context): array;
 
     public function generateApplicationAnswers(array $context): array;
-    
+
     public function generateResumeSuggestions(array $context): array;
+
+    public function generateInterviewPreparation(array $context): array;
 }

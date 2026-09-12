@@ -70,4 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/jobs/{id}/assistant/cover-letter', [\App\Http\Controllers\ApplicationAssistantController::class, 'coverLetter']);
     Route::post('/jobs/{id}/assistant/answers', [\App\Http\Controllers\ApplicationAssistantController::class, 'applicationAnswers']);
     Route::post('/jobs/{id}/assistant/resume-suggestions', [\App\Http\Controllers\ApplicationAssistantController::class, 'resumeSuggestions']);
+
+    // Interview Routes
+    Route::post('/jobs/{id}/interview/prepare', [\App\Http\Controllers\InterviewController::class, 'prepare']);
 });

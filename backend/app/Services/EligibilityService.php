@@ -40,7 +40,7 @@ class EligibilityService
         foreach ($mandatoryRequirements as $req) {
             $match = $this->evaluateRequirement($req, $resume);
             
-            if ($match['match_type'] === 'missing') {
+            if ($match['match_type'] === 'missing' || $match['match_type'] === 'partial') {
                 $missingRequired[] = $req->normalized_value ?? $req->requirement_text;
             } elseif ($match['match_type'] === 'uncertain') {
                 $uncertainRequired[] = $req->normalized_value ?? $req->requirement_text;

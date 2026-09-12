@@ -42,4 +42,9 @@ class AIService
     {
         return $this->provider->generateResumeSuggestions($context);
     }
+
+    public function generateInterviewPreparation(array $context): array
+    {
+        return $this->provider->generateInterviewPreparation($context);
+    }
 }
