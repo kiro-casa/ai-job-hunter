@@ -320,20 +320,27 @@ export default function JobsPage() {
               className="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-md transition-shadow"
             >
               <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
-                  <p className="text-gray-600">{job.company}</p>
-                  {job.location && <p className="text-sm text-gray-500 mt-1">📍 {job.location}</p>}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-semibold text-gray-900 truncate">{job.title}</h3>
+                  <p className="text-gray-600 truncate">{job.company}</p>
+                  {job.location && <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">📍 {job.location}</p>}
                 </div>
                 
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {/* ✅ UPDATED: Eye Icon Button */}
                   <button
                     onClick={(e) => { e.stopPropagation(); setViewJobModal(job); }}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm transition"
+                    title="View Job"
+                    className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer whitespace-nowrap flex items-center justify-center"
                   >
-                    View Job
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
                   </button>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  
+                  {/* Status Label */}
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
                     job.status === 'new' ? 'bg-gray-100 text-gray-800' :
                     job.status === 'qualified' ? 'bg-green-100 text-green-800' :
                     'bg-blue-100 text-blue-800'
@@ -458,7 +465,7 @@ export default function JobsPage() {
         )}
       </div>
 
-      {/* ✅ NEW: View Job Modal */}
+      {/* View Job Modal */}
       {viewJobModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
@@ -468,7 +475,7 @@ export default function JobsPage() {
                   <h2 className="text-2xl font-bold text-gray-900">{viewJobModal.title}</h2>
                   <p className="text-lg text-gray-600">{viewJobModal.company}</p>
                   {viewJobModal.location && (
-                    <p className="text-sm text-gray-500 mt-1 flex items-center">
+                    <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
                       📍 {viewJobModal.location}
                     </p>
                   )}
