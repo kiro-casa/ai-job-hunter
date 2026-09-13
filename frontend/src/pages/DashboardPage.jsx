@@ -32,28 +32,32 @@ export default function DashboardPage() {
   ] : [];
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+      {/* Stats Grid - Responsive */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
         {statCards.map(stat => (
-          <div key={stat.label} className="bg-white rounded-lg shadow p-4">
-            <p className="text-sm text-gray-600">{stat.label}</p>
-            <p className={`text-3xl font-bold mt-2 ${stat.color}`}>
+          <div key={stat.label} className="bg-white rounded-lg shadow p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-gray-600 truncate">{stat.label}</p>
+            <p className={`text-2xl sm:text-3xl font-bold mt-2 ${stat.color}`}>
               {stat.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+      {/* Welcome Section */}
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
           Welcome to AI Job Hunter
         </h2>
-        <p className="text-gray-600 mb-4">
+        <p className="text-sm sm:text-base text-gray-600 mb-4">
           Your AI-powered career assistant is ready. Here's how to get started:
         </p>
-        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+        <ol className="list-decimal list-inside space-y-2 text-sm sm:text-base text-gray-700">
           <li>Upload your resume in the <strong>Resume</strong> tab</li>
           <li>Add jobs you're interested in in the <strong>Jobs</strong> tab</li>
           <li>View match scores and eligibility in each job detail</li>
