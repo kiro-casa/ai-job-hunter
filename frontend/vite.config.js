@@ -10,12 +10,6 @@ export default defineConfig({
   build: {
     // Optimize for mobile and smaller devices
     target: 'esnext',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-      },
-    },
     rollupOptions: {
       output: {
         manualChunks: (id) => {
