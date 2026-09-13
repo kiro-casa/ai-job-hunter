@@ -46,6 +46,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip non-http/https requests (chrome-extension, file, etc.)
+  if (!event.request.url.startsWith('http://') && !event.request.url.startsWith('https://')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) {
@@ -60,7 +65,10 @@ self.addEventListener('fetch', (event) => {
         ) {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
+            // Only cache http/https requests
+            if (event.request.url.startsWith('http://') || event.request.url.startsWith('https://')) {
+              cache.put(event.request, responseToCache);
+            }
           });
         }
         return response;
