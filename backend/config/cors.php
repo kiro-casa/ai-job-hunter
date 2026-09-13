@@ -9,7 +9,7 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 
     'allowed_origins' => [
         'https://ai-job-hunter-app.vercel.app',
@@ -20,7 +20,8 @@ return [
     ],
 
     'allowed_origins_patterns' => [
-        '#^https://.*\.vercel\.app$#',  // Allow all Vercel deployments
+        // Restrict to only your specific deployment domain
+        // Do NOT use: '#^https://.*\.vercel\.app$#' as it allows all Vercel deployments
     ],
 
     'allowed_headers' => ['*'],

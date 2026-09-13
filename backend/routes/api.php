@@ -18,9 +18,11 @@ Route::get('/health', function () {
     ]);
 });
 
-// Authentication routes (public)
-Route::post('/auth/register', [RegisterController::class, 'store']);
-Route::post('/auth/login', [LoginController::class, 'store']);
+// Authentication routes (public) with rate limiting
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('/auth/register', [RegisterController::class, 'store']);
+    Route::post('/auth/login', [LoginController::class, 'store']);
+});
 
 // Protected routes (require authentication)
 Route::middleware('auth:sanctum')->group(function () {

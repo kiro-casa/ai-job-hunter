@@ -12,19 +12,19 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         try {
-            \Log::info('Login attempt', ['email' => $request->input('email')]);
+            \Log::info('Login attempt initiated');
             
             $validated = $request->validate([
                 'email' => ['required', 'string', 'email'],
                 'password' => ['required', 'string'],
             ]);
 
-            \Log::info('Validation passed', ['email' => $validated['email']]);
+            \Log::info('Validation passed');
 
             $user = User::where('email', $validated['email'])->first();
 
             if (!$user) {
-                \Log::warning('User not found', ['email' => $validated['email']]);
+                \Log::warning('Login failed: user not found');
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials',
@@ -32,14 +32,14 @@ class LoginController extends Controller
             }
 
             if (!Hash::check($validated['password'], $user->password)) {
-                \Log::warning('Invalid password', ['email' => $validated['email']]);
+                \Log::warning('Login failed: invalid password');
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials',
                 ], 401);
             }
 
-            \Log::info('User found, creating token', ['user_id' => $user->id, 'email' => $user->email]);
+            \Log::info('User authenticated, creating token', ['user_id' => $user->id]);
 
             try {
                 $token = $user->createToken('auth-token')->plainTextToken;

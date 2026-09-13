@@ -42,18 +42,14 @@ class RegisterController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Registration error: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-                'email' => $validated['email'] ?? 'unknown',
+            \Log::error('Registration error', [
+                'error_type' => get_class($e),
+                'message' => $e->getMessage(),
             ]);
 
-            $debug = config('app.debug');
             return response()->json([
                 'success' => false,
-                'message' => $debug ? $e->getMessage() : 'Server error during registration',
-                'error' => $debug ? ['file' => $e->getFile(), 'line' => $e->getLine()] : null,
+                'message' => 'Server error during registration',
             ], 500);
         }
     }
