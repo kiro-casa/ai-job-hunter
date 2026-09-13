@@ -12,21 +12,46 @@ class LoginController extends Controller
     public function store(Request $request)
     {
         try {
+            \Log::info('Login attempt', ['email' => $request->input('email')]);
+            
             $validated = $request->validate([
                 'email' => ['required', 'string', 'email'],
                 'password' => ['required', 'string'],
             ]);
 
+            \Log::info('Validation passed', ['email' => $validated['email']]);
+
             $user = User::where('email', $validated['email'])->first();
 
-            if (!$user || !Hash::check($validated['password'], $user->password)) {
+            if (!$user) {
+                \Log::warning('User not found', ['email' => $validated['email']]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials',
                 ], 401);
             }
 
-            $token = $user->createToken('auth-token')->plainTextToken;
+            if (!Hash::check($validated['password'], $user->password)) {
+                \Log::warning('Invalid password', ['email' => $validated['email']]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials',
+                ], 401);
+            }
+
+            \Log::info('User found, creating token', ['user_id' => $user->id, 'email' => $user->email]);
+
+            try {
+                $token = $user->createToken('auth-token')->plainTextToken;
+                \Log::info('Token created successfully', ['user_id' => $user->id]);
+            } catch (\Exception $tokenError) {
+                \Log::error('Token creation failed', [
+                    'user_id' => $user->id,
+                    'error' => $tokenError->getMessage(),
+                    'trace' => $tokenError->getTraceAsString(),
+                ]);
+                throw $tokenError;
+            }
 
             return response()->json([
                 'success' => true,
@@ -37,6 +62,7 @@ class LoginController extends Controller
                 'message' => 'Login successful',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::warning('Validation error', ['errors' => $e->errors()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed',
@@ -47,14 +73,12 @@ class LoginController extends Controller
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
-                'email' => $validated['email'] ?? 'unknown',
             ]);
 
-            $debug = config('app.debug');
             return response()->json([
                 'success' => false,
-                'message' => $debug ? $e->getMessage() : 'Server error during login',
-                'error' => $debug ? ['file' => $e->getFile(), 'line' => $e->getLine()] : null,
+                'message' => $e->getMessage(),
+                'error' => ['file' => $e->getFile(), 'line' => $e->getLine()],
             ], 500);
         }
     }
