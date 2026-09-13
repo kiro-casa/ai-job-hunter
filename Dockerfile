@@ -32,15 +32,14 @@ COPY . .
 WORKDIR /app/backend
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts
 
-# 2. Create a dummy .env from example (don't overwrite if APP_KEY already exists)
-RUN cp .env.example .env || echo "APP_NAME=Laravel" > .env
-# Only generate key if not already set in environment
-RUN if [ -z "$APP_KEY" ]; then php artisan key:generate --force; fi
+# 3. For Render: Don't create .env file, Laravel will read env vars directly
+# Only create .env if APP_KEY is not set in environment
+RUN if [ -z "$APP_KEY" ]; then php artisan key:generate --force 2>/dev/null || true; fi
 
-# 3. Now run the scripts safely
+# 4. Run composer dump-autoload
 RUN composer dump-autoload
 
-# 4. Build React frontend and copy to Laravel public folder
+# 5. Build React frontend and copy to Laravel public folder
 WORKDIR /app/frontend
 RUN npm install && npm run build
 RUN cp -r dist/* ../backend/public/
