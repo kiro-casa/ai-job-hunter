@@ -51,5 +51,5 @@ RUN chmod -R 777 /app/backend/storage /app/backend/bootstrap/cache
 # Expose port 10000 (Render's default for Docker)
 EXPOSE 10000
 
-# Run migrations and start the server (Use Render's PORT variable)
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+# Run migrations, clear cache, and start the server
+CMD ["sh", "-c", "php artisan migrate --force && php artisan config:clear && php artisan route:clear && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
