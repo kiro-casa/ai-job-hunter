@@ -217,9 +217,6 @@ export default function ApplicationsPage() {
                     selectedApp.notes.map(note => (
                       <div key={note.id} className="bg-gray-50 rounded p-3">
                         <p className="text-sm text-gray-700">{note.note}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {new Date(note.created_at).toLocaleDateString()}
-                        </p>
                       </div>
                     ))
                   ) : (
