@@ -1,6 +1,9 @@
 # Use PHP 8.4 CLI image to match your composer.lock requirements
 FROM php:8.4-cli
 
+# Set production API URL for frontend build
+ENV VITE_API_URL=https://ai-job-hunter-api-cz6k.onrender.com/api
+
 # Install system dependencies (libpq-dev is required for PostgreSQL)
 RUN apt-get update && apt-get install -y \
     git curl libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev zip unzip gnupg \
@@ -39,7 +42,7 @@ RUN composer dump-autoload
 
 # 4. Build React frontend and copy to Laravel public folder
 WORKDIR /app/frontend
-RUN npm install && VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api} npm run build
+RUN npm install && npm run build
 RUN cp -r dist/* ../backend/public/
 
 # Set working directory back to backend
