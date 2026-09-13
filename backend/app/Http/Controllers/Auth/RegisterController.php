@@ -35,17 +35,25 @@ class RegisterController extends Controller
                 ],
                 'message' => 'Registration successful',
             ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
             \Log::error('Registration error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
+                'email' => $validated['email'] ?? 'unknown',
             ]);
 
+            $debug = config('app.debug');
             return response()->json([
                 'success' => false,
-                'message' => 'Server error during registration',
-                'error' => config('app.debug') ? $e->getMessage() : null,
+                'message' => $debug ? $e->getMessage() : 'Server error during registration',
+                'error' => $debug ? ['file' => $e->getFile(), 'line' => $e->getLine()] : null,
             ], 500);
         }
     }

@@ -36,17 +36,25 @@ class LoginController extends Controller
                 ],
                 'message' => 'Login successful',
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
             \Log::error('Login error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
+                'email' => $validated['email'] ?? 'unknown',
             ]);
 
+            $debug = config('app.debug');
             return response()->json([
                 'success' => false,
-                'message' => 'Server error during login',
-                'error' => config('app.debug') ? $e->getMessage() : null,
+                'message' => $debug ? $e->getMessage() : 'Server error during login',
+                'error' => $debug ? ['file' => $e->getFile(), 'line' => $e->getLine()] : null,
             ], 500);
         }
     }
