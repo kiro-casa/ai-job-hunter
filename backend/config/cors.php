@@ -1,14 +1,31 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Cross-Origin Resource Sharing (CORS) Configuration
+    |--------------------------------------------------------------------------
+    */
+
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
+
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://localhost:5173', 'http://localhost:8000'],
-    'allowed_origins_patterns' => [
-        '#.*\.render\.com$#',  // Allow all Render.com domains
+
+    'allowed_origins' => [
+        'https://frontend-blue-gamma-66.vercel.app', // 👈 YOUR VERCEL URL (No trailing slash!)
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:3000',
     ],
+
+    'allowed_origins_patterns' => [],
+
     'allowed_headers' => ['*'],
+
     'exposed_headers' => [],
+
     'max_age' => 0,
-    'supports_credentials' => true,
+
+    'supports_credentials' => true, // 👈 CRUCIAL for Laravel Sanctum
 ];
