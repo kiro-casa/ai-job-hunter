@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
+import api from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -11,6 +12,8 @@ export function AuthProvider({ children }) {
     // Check if user is logged in on app load
     const token = authService.getToken();
     if (token) {
+      // Set the Authorization header for all requests
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const storedUser = authService.getStoredUser();
       if (storedUser) {
         setUser(storedUser);

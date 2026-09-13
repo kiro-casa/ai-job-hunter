@@ -23,23 +23,39 @@ const api = axios.create({
   withXSRFToken: true,   
 });
 
-// Log all requests in development
-if (import.meta.env.DEV) {
-  api.interceptors.request.use(config => {
+// Add token to every request
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  if (import.meta.env.DEV) {
     console.log('Request:', config.method?.toUpperCase(), config.url);
-    return config;
-  });
+  }
+  
+  return config;
+}, error => {
+  if (import.meta.env.DEV) {
+    console.error('Request error:', error);
+  }
+  return Promise.reject(error);
+});
 
-  api.interceptors.response.use(
-    response => {
+// Log responses in development
+api.interceptors.response.use(
+  response => {
+    if (import.meta.env.DEV) {
       console.log('Response OK:', response.status, response.config.url);
-      return response;
-    },
-    error => {
-      console.error('Response error:', error.response?.status, error.config?.url);
-      return Promise.reject(error);
     }
-  );
-}
+    return response;
+  },
+  error => {
+    if (import.meta.env.DEV) {
+      console.error('Response error:', error.response?.status, error.config?.url);
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
