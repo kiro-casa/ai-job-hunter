@@ -148,6 +148,9 @@ export default function ResumePage() {
               {resumeData.experiences?.map((exp, idx) => (
                 <div key={idx} className="mb-3">
                   <p className="font-semibold">{exp.job_title} at {exp.company}</p>
+                  <p className="text-sm text-gray-600">
+                    {exp.start_date} to {exp.is_current ? 'Present' : exp.end_date}
+                  </p>
                   <p className="text-sm text-gray-700 mt-1">{exp.responsibilities}</p>
                 </div>
               ))}
@@ -159,7 +162,7 @@ export default function ResumePage() {
               {resumeData.educations?.map((edu, idx) => (
                 <div key={idx} className="mb-2">
                   <p className="font-semibold">{edu.degree} in {edu.field_of_study}</p>
-                  <p className="text-sm text-gray-600">{edu.institution}</p>
+                  <p className="text-sm text-gray-600">{edu.institution} ({edu.end_date})</p>
                 </div>
               ))}
             </div>

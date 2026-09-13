@@ -15,9 +15,16 @@ class ResumeEducation extends Model
 
     protected $casts = [
         'is_current' => 'boolean',
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start_date' => 'date:Y-m-d',
+        'end_date' => 'date:Y-m-d',
     ];
+
+    protected $appends = ['end_date_or_present'];
+
+    public function getEndDateOrPresentAttribute()
+    {
+        return $this->is_current ? 'Present' : ($this->end_date ? $this->end_date->format('Y-m-d') : null);
+    }
 
     public function resume()
     {
