@@ -11,29 +11,43 @@ class LoginController extends Controller
 {
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+        try {
+            $validated = $request->validate([
+                'email' => ['required', 'string', 'email'],
+                'password' => ['required', 'string'],
+            ]);
 
-        $user = User::where('email', $validated['email'])->first();
+            $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+            if (!$user || !Hash::check($validated['password'], $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials',
+                ], 401);
+            }
+
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user' => $user,
+                    'token' => $token,
+                ],
+                'message' => 'Login successful',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Login error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid credentials',
-            ], 401);
+                'message' => 'Server error during login',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
         }
-
-        $token = $user->createToken('auth-token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'user' => $user,
-                'token' => $token,
-            ],
-            'message' => 'Login successful',
-        ]);
     }
 }

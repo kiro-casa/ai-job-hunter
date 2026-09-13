@@ -11,6 +11,8 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     envVars:
+      - key: VITE_API_URL
+        value: https://ai-job-hunter-api-cz6k.onrender.com/api
       - key: APP_ENV
         value: production
       - key: APP_DEBUG

@@ -39,7 +39,7 @@ RUN composer dump-autoload
 
 # 4. Build React frontend and copy to Laravel public folder
 WORKDIR /app/frontend
-RUN npm install && npm run build
+RUN npm install && VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api} npm run build
 RUN cp -r dist/* ../backend/public/
 
 # Set working directory back to backend
@@ -52,4 +52,4 @@ RUN chmod -R 777 /app/backend/storage /app/backend/bootstrap/cache
 EXPOSE 10000
 
 # Run migrations, clear cache, and start the server
-CMD ["sh", "-c", "php artisan migrate --force && php artisan config:clear && php artisan route:clear && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+CMD ["sh", "-c", "php artisan migrate --force || true && php artisan config:clear && php artisan route:clear && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
